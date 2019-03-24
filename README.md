@@ -1,2 +1,2 @@
 # OnlineNewsPopularity
-Personal project to analyse the historical data, parameters to predict number of shares for an article.
+Personal project to analyse the historical data of articles for an digital entertainment company and using those parameters to predict number of shares for an article.
