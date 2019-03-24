@@ -1,25 +1,31 @@
-import pandas as pd
-from sklearn import model_selection
-from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
+import mashable.articles.readData as Reader
+import mashable.articles.testAndTrainModeler as TestAndTrainModeler
+import mashable.articles.randomForestTreeModel as randomForestTreeModel
+import mashable.articles.decisionTreeModel as DecisionTreeModel
+import mashable.articles.logisticRegressionTreeModel as LogisticModel
+import mashable.articles.GaussianModel as GaussianModel
 
-csv_filename = "data/OnlineNewsPopularity.csv"
 
-df = pd.read_csv(csv_filename)
+df = Reader.read("data/OnlineNewsPopularity.csv")
+X_train, X_test, y_train, y_test = TestAndTrainModeler.prepareTrainAndTestData(df,0.4)
+randomForestAccuracyScore = metrics.accuracy_score(randomForestTreeModel.predict(X_train,X_test,y_train), y_test)
+decisionTreeAccuracyScore = metrics.accuracy_score(DecisionTreeModel.predict(X_train,X_test,y_train), y_test)
+logisticRegressionAccuracyScore = metrics.accuracy_score(LogisticModel.predict(X_train,X_test,y_train), y_test)
+gaussianAccuracyScore = metrics.accuracy_score(GaussianModel.predict(X_train,X_test,y_train), y_test)
 
-popular = df.shares >= 1400
-unpopular = df.shares < 1400
 
-df.loc[popular, 'shares'] = 1
-df.loc[unpopular, 'shares'] = 0
+print("randomForestAccuracyScore", randomForestAccuracyScore)
+print("decisionTreeAccuracyScore", decisionTreeAccuracyScore)
+print("logisticRegressionAccuracyScore", logisticRegressionAccuracyScore)
+print("gaussianAccuracyScore", gaussianAccuracyScore)
 
-features = list(df.columns[2:60])
+if randomForestAccuracyScore > max(decisionTreeAccuracyScore, logisticRegressionAccuracyScore, gaussianAccuracyScore):
+    print("\n\nRandom Forest Tree Model is better fit for prediction")
+elif decisionTreeAccuracyScore > max(logisticRegressionAccuracyScore, gaussianAccuracyScore):
+    print("Decision Tree Model looks better for prediction")
+elif logisticRegressionAccuracyScore > gaussianAccuracyScore:
+    print("Logistic Regression Model looks better for prediction")
+else:
+    print("Gaussian Model looks better for prediction")
 
-X = df[features]
-y = df['shares']
-X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.4)
-
-model = RandomForestClassifier(criterion="entropy", max_depth=None)
-model.fit(X_train, y_train)
-prediction = model.predict(X_test)
-print(metrics.accuracy_score(prediction, y_test))
