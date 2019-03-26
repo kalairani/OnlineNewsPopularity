@@ -1,6 +1,8 @@
 import pandas as pd
+import pkg_resources
 
 
 def read(file):
-    return pd.read_csv(file)
+    filepath=pkg_resources.resource_filename(__name__, file)
+    return pd.read_csv(filepath)
 
