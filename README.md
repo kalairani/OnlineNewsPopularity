@@ -12,6 +12,6 @@ Below are the steps to run the files, in windows:
   ```  
 Concluded that Random Forest Classifier Model is better fit for the prediction.
 
-*Prerequisite:* Python should be installed the required packages as pandas, sklearn, numpy etc
+*Prerequisite:* Python should be installed with packages pandas, sklearn, numpy etc as required.
 
 Thank you!
